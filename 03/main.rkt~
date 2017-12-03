@@ -1,0 +1,4 @@
+(define (make_leg num) 
+	(+ 1 num))
+
+(make_leg 4)
