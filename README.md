@@ -18,3 +18,9 @@
 1. JS
 1. Elm
 1. Ruby
+
+- Pony
+- Scala
+- ReasonML
+- Gluon
+- Pyret
