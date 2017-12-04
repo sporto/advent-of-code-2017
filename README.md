@@ -6,7 +6,11 @@
 1. Rust
 1. Ocaml
 1. Idris
-1. Ruby
+1. F#
+1. Dart
+1. Crystal
+1. Julia
+1. Elixir
 1. Python
 1. Swift
 1. Kotlin
