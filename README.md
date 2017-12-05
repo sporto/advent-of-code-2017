@@ -4,12 +4,12 @@
 1. Nim
 1. Racket
 1. Rust
+1. Julia
 1. Ocaml
 1. Idris
 1. F#
 1. Dart
 1. Crystal
-1. Julia
 1. Elixir
 1. Python
 1. Swift
