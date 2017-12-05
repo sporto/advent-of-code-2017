@@ -14,9 +14,20 @@ fn get_input() -> String {
 	contents
 }
 
+fn sort(word: &str) -> String {
+	let mut vec = word
+		.chars()
+		.collect::<Vec<char>>();
+
+	vec.sort();
+
+	vec.iter().map(|c| c.to_string()).collect::<Vec<String>>().join("")
+}
+
 fn is_valid(line: &str) -> usize {
 	let words = line
-		.split_whitespace();
+		.split_whitespace()
+		.map(sort);
 
 	let uniques: HashMap<_, _> = words
 		.clone()
@@ -24,7 +35,7 @@ fn is_valid(line: &str) -> usize {
 		.collect();
 
 	let dups = words.count() - uniques.len();
-	
+
 	if dups == 0 {
 		1
 	} else {
