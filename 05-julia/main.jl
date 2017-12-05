@@ -13,7 +13,11 @@ index = 1
 
 while index > 0 && index < len + 1
     move = nums[index]
-    nums[index] = move + 1
+    if move >= 3
+        nums[index] = move - 1
+    else
+        nums[index] = move + 1
+    end
     index += move
     count += 1
 end
