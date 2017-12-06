@@ -30,7 +30,7 @@ fun distributeNextBlock(blocksToDistribute: Int, prevBlockUsed: Int, list: Array
     }
 }
 
-fun distribute(count: Int, seen: HashMap<String, Boolean>, list: ArrayList<Int>): Int {
+fun distribute(count: Int, seen: HashMap<String, Int>, list: ArrayList<Int>): Int {
     val nextIndex = getNextBank(list)
     val blocksToDistribute = list[nextIndex]
 
@@ -39,18 +39,20 @@ fun distribute(count: Int, seen: HashMap<String, Boolean>, list: ArrayList<Int>)
     val newList = distributeNextBlock(blocksToDistribute, nextIndex, list)
 
     val key = newList.joinToString("-")
-    val alreadySeen = seen.containsKey(key)
+    val seenIn = seen.get(key)
 
-    if (alreadySeen) {
-        return count + 1
-    } else {
-        seen.put(key, true)
+    println("seenIn $seenIn")
+
+    if (seenIn == null) {
+        seen.put(key, count)
         return distribute(count + 1, seen, newList)
+    } else {
+        return count - seenIn
     }
 }
 
 fun main(args: Array<String>) {
-    val seen = hashMapOf("" to true)
+    val seen = hashMapOf("" to 1)
     // val input = arrayListOf(0, 2, 7, 0)
     val input = arrayListOf(2, 8, 8, 5, 4, 2, 3, 1, 5, 5, 1, 2, 15, 13, 5, 14)
 
