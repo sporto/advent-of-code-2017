@@ -1,0 +1,4 @@
+*.ktn
+*.jar
+META-INF
+*.class
