@@ -23,6 +23,7 @@ type parsed_line = { name : string; children : string list };;
 
 let parseChildren children =
     Str.split (Str.regexp ", ") children
+        |> List.map String.trim
 
 let parseLine (line: string) : (parsed_line, string) result =
     match (Str.split (Str.regexp "->") line) with
