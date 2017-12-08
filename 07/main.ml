@@ -19,10 +19,7 @@ type ('a, 'b) result =
   | Ok of 'a
   | Error of 'b
 
-type parsedLine = { name : string; children : string list };;
-
-let initial =
-    StringMap.empty;;
+type parsed_line = { name : string; children : string list };;
 
 let parseChildren children =
     Str.split (Str.regexp ", ") children
@@ -47,14 +44,27 @@ let parsedToString parsed =
         | Ok parsedLine ->
             parsedLine.name
 
+let setParent parentName childrenName acc =
+    StringMap.add childrenName parentName acc
+
+let accummulate parsedLine acc =
+    List.fold_left (setParent parsedLine.name) acc parsedLine.children
+
+(* val accummulate : parsed_line -> StringMap -> StringMap *)
+
 (* Process *)
 
 let lines = read_file "input.txt";;
 
+let initialMap =
+    StringMap.empty;;
+
 let result =
     lines
         |> List.map parseLine
-        |> List.map parsedToString;;
+        |> List.fold_left accummulate initialMap;;
 
+
+(* 
 result
-    |> List.map print_string;;
+    |> List.map print_string;; *)
