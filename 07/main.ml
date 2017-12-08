@@ -24,7 +24,7 @@ type parsed_line = { name : string; children : string list };;
 let parseChildren children =
     Str.split (Str.regexp ", ") children
 
-let parseLine line =
+let parseLine (line: string) : (parsed_line, string) result =
     match (Str.split (Str.regexp "->") line) with
     | [] -> Error "Invalid"
     | x :: afterArrow ->
@@ -44,13 +44,14 @@ let parsedToString parsed =
         | Ok parsedLine ->
             parsedLine.name
 
-let setParent parentName childrenName acc =
+let setParent (parentName: string) (acc: string StringMap.t) (childrenName: string) : string StringMap.t =
     StringMap.add childrenName parentName acc
 
-let accummulate parsedLine acc =
-    List.fold_left (setParent parsedLine.name) acc parsedLine.children
-
-(* val accummulate : parsed_line -> StringMap -> StringMap *)
+let accummulate (acc: string StringMap.t) (parsedLineResult: (parsed_line, string) result) : string StringMap.t =
+    match parsedLineResult with
+    | Error _ -> acc
+    | Ok parsedLine ->
+        List.fold_left (setParent parsedLine.name) acc parsedLine.children
 
 (* Process *)
 
@@ -65,6 +66,8 @@ let result =
         |> List.fold_left accummulate initialMap;;
 
 
-(* 
+
 result
-    |> List.map print_string;; *)
+    |> StringMap.bindings
+    |> List.map (fun (key, _) -> key)
+    |> List.map print_string;;
