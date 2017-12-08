@@ -54,21 +54,44 @@ let accummulate (acc: string StringMap.t) (parsedLineResult: (parsed_line, strin
     | Ok parsedLine ->
         List.fold_left (setParent parsedLine.name) acc parsedLine.children
 
+let rec look (map : string StringMap.t) (key: string) : string =
+    try 
+        look map (StringMap.find key map)
+    with 
+        Not_found -> key
+
 (* Process *)
 
 let lines = read_file "input.txt";;
 
+(* 
+Map from children to parent
+*)
 let initialMap =
     StringMap.empty;;
 
-let result =
+let childrenToParentMap =
     lines
         |> List.map parseLine
         |> List.fold_left accummulate initialMap;;
 
+let allKeys =
+    childrenToParentMap
+        |> StringMap.bindings
+        |> List.map (fun (key, _) -> key)
+
+let firstKey =
+    match allKeys with
+    | [] -> ""
+    | x::_ -> x
+
+let result =
+    look childrenToParentMap firstKey;;
 
 
-result
+(* result
     |> StringMap.bindings
     |> List.map (fun (key, _) -> key)
-    |> List.map print_string;;
+    |> List.map print_string;; *)
+
+print_string result;
