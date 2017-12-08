@@ -13,46 +13,48 @@ let read_file filename =
       close_in chan;
       List.rev !lines ;;
 
-
-
-
-(* Discard all singles *)
-(* Parse only the -> *)
-
-
-(* type branch =
-    | Branch of string * (branch list);; *)
-
 module StringMap = Map.Make(String);;
+
+type ('a, 'b) result =
+  | Ok of 'a
+  | Error of 'b
+
+type parsedLine = { name : string; children : string list };;
 
 let initial =
     StringMap.empty;;
 
+let parseChildren children =
+    Str.split (Str.regexp ", ") children
+
 let parseLine line =
     match (Str.split (Str.regexp "->") line) with
-    | [] -> ""
-    | x :: xs ->
+    | [] -> Error "Invalid"
+    | x :: afterArrow ->
         match (Str.split (Str.regexp " ") x) with
-        | [] -> ""
-        | name::num -> name
+        | [] -> Error "Invalid"
+        | name::num ->
+            match afterArrow with
+            | [] ->
+                Ok { name = name; children = [] }
+            | children::_ ->
+                Ok { name = name; children = parseChildren children }
 
-    (* let
-        parts =
-            Str.split (Str.regexp "->") line in
+let parsedToString parsed =
+    match parsed with
+        | Error err ->
+            err
+        | Ok parsedLine ->
+            parsedLine.name
 
-        nameParts =
-            Str.split (Str.regexp " ") parts[0] in
-
-        name =
-            nameParts[0] in
-    name;;
- *)
 (* Process *)
 
 let lines = read_file "input.txt";;
 
 let result =
-    List.map  parseLine lines;;
+    lines
+        |> List.map parseLine
+        |> List.map parsedToString;;
 
 result
     |> List.map print_string;;
