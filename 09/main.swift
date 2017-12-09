@@ -18,30 +18,67 @@ func getInput() -> String {
 	return content
 }
 
-func cleanGarbage(input: String) -> String {
-	let initial = (result: "", isGarbage: false, cancel: false)
+func cleanGarbage(input: String) -> (String, Int) {
+	let initial = (result: "", isGarbage: false, cancel: false, charsInGarbage: 0)
 
 	let result = input.characters.reduce(initial, {acc, c in
 		if acc.cancel {
-			return (result: acc.result, isGarbage: acc.isGarbage, cancel: false)
+			return (
+				result: acc.result, 
+				isGarbage: acc.isGarbage, 
+				cancel: false,
+				charsInGarbage: acc.charsInGarbage
+			)
 		} else {
 			if c == "!" {
-				return (result: acc.result, isGarbage: acc.isGarbage, cancel: true)
+				return (
+					result: acc.result,
+					isGarbage: acc.isGarbage,
+					cancel: true,
+					charsInGarbage: acc.charsInGarbage
+				)
 			} else {
 				if acc.isGarbage {
 					if c == ">" {
-						return (result: acc.result, isGarbage: false, cancel: false)
+						// Close garbage
+						return (
+							result: acc.result,
+							isGarbage: false,
+							cancel: false,
+							charsInGarbage: acc.charsInGarbage
+						)
 					} else {
-						return (result: acc.result, isGarbage: true, cancel: false)
+						return (
+							result: acc.result,
+							isGarbage: true,
+							cancel: false,
+							charsInGarbage: acc.charsInGarbage + 1
+						)
 					}
 				} else {
 					if c == "<" {
-						return (result: acc.result, isGarbage: true, cancel: false)
+						// Start garbage
+						return (
+							result: acc.result,
+							isGarbage: true,
+							cancel: false,
+							charsInGarbage: acc.charsInGarbage
+						)
 					} else {
 						if c == "," {
-							return (result: acc.result, isGarbage: false, cancel: false)
+							return (
+								result: acc.result,
+								isGarbage: false,
+								cancel: false,
+								charsInGarbage: acc.charsInGarbage
+							)
 						} else {
-							return (result: "\(acc.result)\(c)", isGarbage: false, cancel: false)
+							return (
+								result: "\(acc.result)\(c)",
+								isGarbage: false,
+								cancel: false,
+								charsInGarbage: acc.charsInGarbage
+							)
 						}
 					}
 				}
@@ -49,7 +86,10 @@ func cleanGarbage(input: String) -> String {
 		}
 	})
 
-	return result.result.trimmingCharacters(in: .whitespacesAndNewlines)
+	return (
+		result.result.trimmingCharacters(in: .whitespacesAndNewlines),
+		result.charsInGarbage
+	)
 }
 
 func score(input: String) -> Int {
@@ -67,7 +107,8 @@ func score(input: String) -> Int {
 
 
 let input = getInput()
-let clean = cleanGarbage(input: input)
+let (clean, charsInGarbage) = cleanGarbage(input: input)
 let levels = score(input: clean)
 
 print(levels)
+print(charsInGarbage)
