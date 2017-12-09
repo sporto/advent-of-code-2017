@@ -1,0 +1,2 @@
+build:
+	crystal main.cr
