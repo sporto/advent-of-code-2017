@@ -1,0 +1,2 @@
+build:
+	swift main.swift
