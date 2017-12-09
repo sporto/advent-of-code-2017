@@ -49,11 +49,25 @@ func cleanGarbage(input: String) -> String {
 		}
 	})
 
+	return result.result.trimmingCharacters(in: .whitespacesAndNewlines)
+}
+
+func score(input: String) -> Int {
+	let initial = (result: 0, currentLevel: 1)
+	let result = input.characters.reduce(initial, {acc, c in
+		if c == "{" {
+			return (result: acc.result + acc.currentLevel, acc.currentLevel + 1)
+		} else {
+			return (result: acc.result, acc.currentLevel - 1)
+		}
+	})
+
 	return result.result
 }
 
 
 let input = getInput()
 let clean = cleanGarbage(input: input)
+let levels = score(input: clean)
 
-print(clean)
+print(levels)
