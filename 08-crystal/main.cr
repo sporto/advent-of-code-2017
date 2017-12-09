@@ -97,7 +97,9 @@ def condition_passes?(registers, instruction : Instruction) : Bool
   end
 end
 
-def apply_instruction(inst : Instruction, registers)
+def apply_instruction(inst : Instruction, acc)
+  registers = acc[0]
+  highest = acc[1]
   target_key = inst.target
   current_value = registers.fetch(target_key) { |k| 0 }
 
@@ -111,7 +113,9 @@ def apply_instruction(inst : Instruction, registers)
            end
 
   registers[target_key] = result.to_i16
-  registers
+  highest = [highest, result].max
+
+  {registers, highest}
 end
 
 instructions = [] of Instruction
@@ -122,15 +126,17 @@ File.each_line path do |line|
 end
 
 registers = {} of String => Int16
+initial = {registers, 0}
 
-registers = instructions.reduce registers do |acc, inst|
-  if condition_passes?(acc, inst)
+result = instructions.reduce initial do |acc, inst|
+  if condition_passes?(acc[0], inst)
     apply_instruction(inst, acc)
   else
     acc
   end
 end
 
-result = registers.values.max
+max = result[0].values.max
 
-puts result
+# puts max
+puts result[1]
