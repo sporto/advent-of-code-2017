@@ -19,7 +19,37 @@ func getInput() -> String {
 }
 
 func cleanGarbage(input: String) -> String {
-	return input
+	let initial = (result: "", isGarbage: false, cancel: false)
+
+	let result = input.characters.reduce(initial, {acc, c in
+		if acc.cancel {
+			return (result: acc.result, isGarbage: acc.isGarbage, cancel: false)
+		} else {
+			if c == "!" {
+				return (result: acc.result, isGarbage: acc.isGarbage, cancel: true)
+			} else {
+				if acc.isGarbage {
+					if c == ">" {
+						return (result: acc.result, isGarbage: false, cancel: false)
+					} else {
+						return (result: acc.result, isGarbage: true, cancel: false)
+					}
+				} else {
+					if c == "<" {
+						return (result: acc.result, isGarbage: true, cancel: false)
+					} else {
+						if c == "," {
+							return (result: acc.result, isGarbage: false, cancel: false)
+						} else {
+							return (result: "\(acc.result)\(c)", isGarbage: false, cancel: false)
+						}
+					}
+				}
+			}
+		}
+	})
+
+	return result.result
 }
 
 
