@@ -24,11 +24,7 @@ defmodule Main do
                 {r, c} = String.split(content, ",")
                     |> List.foldl({0,0}, &Main.move/2)
 
-                # IO.puts Kernel.inspect(result)
-                rows = r |> abs
-                cols = (c / 2) |> abs |> Float.floor
-
-                IO.puts  rows + cols
+                ((abs r) + (abs c)) / 2 |> IO.puts  
         end
     end
 end
