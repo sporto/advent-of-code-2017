@@ -1,30 +1,41 @@
 defmodule Main do
-    def move(dir, {r, c}) do
-        case dir do
+    def move(dir, %{ :current => {cr, cc}, :max => maxSteps}) do
+        {cr, cc} = case dir do
             "n" ->
-                {r - 2, c}
+                {cr - 2, cc}
             "ne" ->
-                {r - 1, c + 1}
+                {cr - 1, cc + 1}
             "se" ->
-                {r + 1, c + 1}
+                {cr + 1, cc + 1}
             "s" ->
-                {r + 2, c}
+                {cr + 2, cc}
             "sw" ->
-                {r + 1, c - 1}
+                {cr + 1, cc - 1}
             "nw" ->
-                {r - 1, c - 1}
+                {cr - 1, cc - 1}
             _ ->
-                {r, c}
+                {cr, cc}
         end
+
+        steps = ((abs cr) + (abs cc)) / 2
+
+        %{ :current => {cr, cc}, :max => max(steps, maxSteps) }
     end
 
     def run do
         case File.read "input.txt" do
             {:ok, content} ->
-                {r, c} = String.split(content, ",")
-                    |> List.foldl({0,0}, &Main.move/2)
+                initial = %{ :current => {0,0}, :max => 0 }
 
-                ((abs r) + (abs c)) / 2 |> IO.puts  
+                result = String.split(content, ",")
+                    |> List.foldl(initial, &Main.move/2)
+
+                %{ :current => {cr, cc} , :max => maxSteps } = result
+
+                ((abs cr) + (abs cc)) / 2 |> IO.puts  
+
+                # Max
+                IO.puts  maxSteps
         end
     end
 end
