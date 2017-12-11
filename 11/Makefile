@@ -1,0 +1,2 @@
+run:
+	elixir main.ex
