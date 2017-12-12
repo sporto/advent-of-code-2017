@@ -20,6 +20,8 @@ type ParsedLine struct {
 	targets []int
 }
 
+var matrix [ 2000 ][ 2000 ] int
+
 // 7 <-> 372, 743, 1965
 func parseLine(line string) ParsedLine {
 	parts := strings.Split(line, "<->")
@@ -46,7 +48,7 @@ func parseLine(line string) ParsedLine {
 	}
 }
 
-func programsIn(matrix [2000][2000]int, pos int) []int {
+func programsIn(pos int) []int {
 	row := matrix[pos]
 	var result []int
 
@@ -59,22 +61,18 @@ func programsIn(matrix [2000][2000]int, pos int) []int {
 	return result
 }
 
-func walk(matrix [2000][2000]int, seen map[int]bool, pos int) map[int]bool {
+func walk(seen map[int]bool, pos int) map[int]bool {
 	exists := seen[pos]
 
 	if exists {
 		return seen
 	} else {
-		linked := programsIn(matrix, pos)
+		linked := programsIn(pos)
 
 		seen[pos] = true
 
-		fmt.Println(pos)
-		fmt.Println(linked)
-		fmt.Println(seen)
-
 		for _, v := range linked {
-			seen = walk(matrix, seen, v)
+			seen = walk(seen, v)
 		}
 
 		return seen
@@ -98,8 +96,6 @@ func main() {
 	file.Seek(0,0)
 	scannerParse := bufio.NewScanner(file)
 
-	var matrix [ 2000 ][ 2000 ] int
-
 	for scannerParse.Scan() {
 		line := scannerParse.Text()
 		parsed := parseLine(line)
@@ -118,33 +114,10 @@ func main() {
 
 	// How many programs are in the group that contains program ID 0?
 	seen := make(map[int]bool)
-	seen = walk(matrix, seen, 0)
-	
-	// pos := 0
-
-	// for {
-	// 	exists := seen[pos]
-
-	// 	if exists {
-	// 		break
-	// 	} else {
-	// 		linked := programsIn(matrix, pos)
-
-	// 		seen[pos] = true
-
-	// 		// fmt.Println(pos)
-	// 		// fmt.Println(linked)
-	// 		// fmt.Println(seen)
-
-	// 		for _, v := range linked {
-	// 			seen = check(matrix, seen, v)
-	// 		}
-
-	// 		return seen
-	// 	}
-	// }
+	seen = walk(seen, 0)
 
 	fmt.Println(seen)
+	fmt.Println(len(seen))
 
 	// fmt.Println(matrix[1675][1022])
 	// fmt.Println(matrix[1022][1675])
