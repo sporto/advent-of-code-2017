@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"sort"
 	"strconv"
 )
 
@@ -112,13 +113,43 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Part 1
 	// How many programs are in the group that contains program ID 0?
-	seen := make(map[int]bool)
-	seen = walk(seen, 0)
+	// seen := make(map[int]bool)
+	// seen = walk(seen, 0)
 
-	fmt.Println(seen)
-	fmt.Println(len(seen))
+	// fmt.Println(seen)
+	// fmt.Println(len(seen))
 
-	// fmt.Println(matrix[1675][1022])
-	// fmt.Println(matrix[1022][1675])
+	// Part 2
+	seenList := []string{}
+	for ix, _ := range matrix {
+		seen := make(map[int]bool)
+		seen = walk(seen, ix)
+
+		// Get list of keys
+		keys := make([]int, 0, len(seen))
+		for k := range seen {
+			keys = append(keys, k)
+		}
+
+		sort.Ints(keys)
+
+		// Convert keys to strings
+		keysStr := make([]string, 0, len(keys))
+		for _, k := range keys {
+			keysStr = append(keysStr, strconv.Itoa(k))
+		}
+
+		seenList = append(seenList, strings.Join(keysStr, "."))
+	}
+
+	// Find uniques
+	uniques := make(map[string]bool)
+	for _, k := range seenList {
+		uniques[k] = true
+	}
+
+	fmt.Println(uniques)
+	fmt.Println(len(uniques))
 }
