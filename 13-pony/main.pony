@@ -79,10 +79,9 @@ primitive Fns
 
     pos
 
-  fun scenario(startTick: U32): U32 =>
+  fun scenario(layerMap: Map[U32, U32], startTick: U32): U32 =>
     var tick = startTick
     var layer : U32 = 0
-    var layerMap = inputAsMap()
     var score : U32 = 0
 
     while layer <= 100 do
@@ -105,23 +104,25 @@ primitive Fns
     score
 
   fun part1(env: Env) =>
-    let score = scenario(0)
+    let layerMap = inputAsMap()
+    let score = scenario(layerMap, 0)
     env.out.print(score.string())
 
   fun part2(env: Env) =>
+    let layerMap = inputAsMap()
     var score : U32 = 1
     var tick : U32 = 0
 
     while score > 0 do
-      score = scenario(tick)
+      score = scenario(layerMap, tick)
 
-      env.out.print("tick " + tick.string())
-      env.out.print("score " + score.string())
+      // env.out.print("tick " + tick.string())
+      // env.out.print("score " + score.string())
 
       tick = tick + 1
     end
 
-    // env.out.print(tick.string())
+    env.out.print((tick - 1).string())
 
 
 actor Main
