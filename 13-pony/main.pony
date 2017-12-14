@@ -1,7 +1,7 @@
 use "collections"
 
 primitive Fns
-  fun inputs(): Array[(I16, I16)] =>
+  fun inputs(): Array[(U32, U32)] =>
     [
       (0, 3)
       (1, 2)
@@ -48,8 +48,8 @@ primitive Fns
       (96, 26)
     ]
 
-  fun inputAsMap(): Map[I16, I16] =>
-    var layerMap = Map[I16, I16]
+  fun inputAsMap(): Map[U32, U32] =>
+    var layerMap = Map[U32, U32]
 
     for input in inputs().values() do
       (let l, let r) = input
@@ -58,10 +58,10 @@ primitive Fns
 
     layerMap
 
-  fun getPosition(range: I16, tick: I16): I16 =>
-    var count: I16 = 0
-    var mov: I16 = 1
-    var pos: I16 = -1
+  fun getPosition(range: U32, tick: U32): U32 =>
+    var count: U32 = 0
+    var mov: U32 = 1
+    var pos: U32 = -1
     let max = range - 1
 
     while count <= tick do
@@ -79,11 +79,11 @@ primitive Fns
 
     pos
 
-  fun scenario(startTick: I16): I16 =>
+  fun scenario(startTick: U32): U32 =>
     var tick = startTick
-    var layer : I16 = 0
+    var layer : U32 = 0
     var layerMap = inputAsMap()
-    var score : I16 = 0
+    var score : U32 = 0
 
     while layer <= 100 do
       let range = layerMap.get_or_else(layer, 0)
@@ -109,8 +109,8 @@ primitive Fns
     env.out.print(score.string())
 
   fun part2(env: Env) =>
-    var score : I16 = 1
-    var tick : I16 = 0
+    var score : U32 = 1
+    var tick : U32 = 0
 
     while score > 0 do
       score = scenario(tick)

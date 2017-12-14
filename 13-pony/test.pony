@@ -14,7 +14,7 @@ class iso _TestGetPosition is UnitTest
   fun name(): String => "Get Position"
 
   fun apply(h: TestHelper) =>
-    let inputs : Array[(I16, I16, I16)] = [
+    let inputs : Array[(U32, U32, U32)] = [
       // range, tick, expected
       (1,       0,    0)
       (2,       0,    0)
@@ -29,6 +29,6 @@ class iso _TestGetPosition is UnitTest
     for input in inputs.values() do
       (let range, let tick, let expected) = input
       let actual = Fns.getPosition(range, tick)
-      h.assert_eq[I16](actual, expected)
+      h.assert_eq[U32](actual, expected)
     end
 
