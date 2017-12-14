@@ -1,6 +1,6 @@
 use "ponytest"
 
-actor Main is TestList
+actor MainT is TestList
   new create(env: Env) =>
     PonyTest(env, this)
 

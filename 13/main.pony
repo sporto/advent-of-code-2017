@@ -1,5 +1,7 @@
+use "collections"
+
 primitive Fns
-  fun input(): Array[(I16,I16)] =>
+  fun input(): Array[(I16, I16)] =>
     [
       (0, 3)
       (1, 2)
@@ -68,9 +70,39 @@ primitive Fns
     pos
 
 
-actor Main1
+actor Main
   new create(env: Env) =>
+    var layerMap = Map[I16, I16]
 
-    env.out.print("Hello")
+    let inputs = Fns.input()
+
+    for input in inputs.values() do
+      (let l, let r) = input
+      layerMap.update(l, r)
+    end
+
+    var tick : I16 = 0
+    var score : I16 = 0
+
+    while tick <= 100 do
+      let range = layerMap.get_or_else(tick, 0)
+
+      if range > 0 then
+        let pos = Fns.getPosition(range, tick)
+        // env.out.print(pos.string())
+
+        if pos == 0 then
+          let severity = tick * range
+          score = score + severity
+        end
+      end
+
+      tick = tick + 1
+    end
+
+    env.out.print(score.string())
+
+    // env.out.print(layerMap.size().string())
+    // env.out.print("Hello")
 
     
