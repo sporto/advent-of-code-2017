@@ -1,7 +1,7 @@
 use "collections"
 
 primitive Fns
-  fun inputs(): Array[(U32, U32)] =>
+  fun inputs1(): Array[(U32, U32)] =>
     [
       (0, 3)
       (1, 2)
@@ -48,10 +48,18 @@ primitive Fns
       (96, 26)
     ]
 
-  fun inputAsMap(): Map[U32, U32] =>
+  fun inputs2(): Array[(U32, U32)] =>
+    [
+      (0, 3)
+      (1, 2)
+      (4, 4)
+      (6, 4)
+    ]
+
+  fun inputAsMap(inputsToUse: Array[(U32, U32)]): Map[U32, U32] =>
     var layerMap = Map[U32, U32]
 
-    for input in inputs().values() do
+    for input in inputsToUse.values() do
       (let l, let r) = input
       layerMap.update(l, r)
     end
@@ -66,30 +74,34 @@ primitive Fns
 
     while count <= tick do
       pos = pos + mov
-      if pos > max then
-        pos = max - 1
-        mov = -1
+
+      mov = if pos >= max then
+        -1
+      elseif pos <= 0 then
+        1
+      else
+        mov
       end
-      if pos < 0 then
-        pos = 1
-        mov = 1
-      end
+
       count = count + 1
     end
 
     pos
 
-  fun scenario(layerMap: Map[U32, U32], startTick: U32): U32 =>
+  fun scenario(env: Env, layerMap: Map[U32, U32], startTick: U32): U32 =>
+    // env.out.print("startTick " +  startTick.string())
     var tick = startTick
     var layer : U32 = 0
     var score : U32 = 0
 
     while layer <= 100 do
       let range = layerMap.get_or_else(layer, 0)
+      // env.out.print("range " +  range.string())
 
       if range > 0 then
         let pos = Fns.getPosition(range, tick)
-        // env.out.print(pos.string())
+        // env.out.print("layer " + layer.string())
+        // env.out.print("pos" + pos.string())
 
         if pos == 0 then
           let severity = layer * range
@@ -104,20 +116,20 @@ primitive Fns
     score
 
   fun part1(env: Env) =>
-    let layerMap = inputAsMap()
-    let score = scenario(layerMap, 0)
+    let layerMap = inputAsMap(inputs2())
+    let score = scenario(env, layerMap, 4)
     env.out.print(score.string())
 
   fun part2(env: Env) =>
-    let layerMap = inputAsMap()
+    let layerMap = inputAsMap(inputs1())
     var score : U32 = 1
     var tick : U32 = 0
 
-    while score > 0 do
-      score = scenario(layerMap, tick)
+    while (score > 0) and (tick < 10000) do
+      score = scenario(env, layerMap, tick)
 
-      // env.out.print("tick " + tick.string())
-      // env.out.print("score " + score.string())
+      env.out.print("tick " + tick.string())
+      env.out.print("score " + score.string())
 
       tick = tick + 1
     end
