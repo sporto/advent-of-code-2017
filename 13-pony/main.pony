@@ -81,29 +81,49 @@ primitive Fns
 
   fun scenario(startTick: I16): I16 =>
     var tick = startTick
+    var layer : I16 = 0
     var layerMap = inputAsMap()
     var score : I16 = 0
 
-    while tick <= 100 do
-      let range = layerMap.get_or_else(tick, 0)
+    while layer <= 100 do
+      let range = layerMap.get_or_else(layer, 0)
 
       if range > 0 then
         let pos = Fns.getPosition(range, tick)
         // env.out.print(pos.string())
 
         if pos == 0 then
-          let severity = tick * range
+          let severity = layer * range
           score = score + severity
         end
       end
 
+      layer = layer + 1
       tick = tick + 1
     end
 
     score
 
+  fun part1(env: Env) =>
+    let score = scenario(0)
+    env.out.print(score.string())
+
+  fun part2(env: Env) =>
+    var score : I16 = 1
+    var tick : I16 = 0
+
+    while score > 0 do
+      score = scenario(tick)
+
+      env.out.print("tick " + tick.string())
+      env.out.print("score " + score.string())
+
+      tick = tick + 1
+    end
+
+    // env.out.print(tick.string())
+
 
 actor Main
   new create(env: Env) =>
-    let score = Fns.scenario(0)
-    env.out.print(score.string())
+    Fns.part2(env)
