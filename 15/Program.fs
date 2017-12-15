@@ -1,6 +1,4 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open System
 
 let rec intToBinary i =
     match i with
@@ -15,7 +13,7 @@ let generate factor prev =
 let lowest16 str =
     let len = String.length str
     let l = len - 1
-    let f = l - 16
+    let f = max (l - 16) 0
     str.[f..l]
 
 let compareBinaries a b =
@@ -56,21 +54,12 @@ let accumulate acc _ =
         result = acc.result + score
     }
 
+let lookupSize =
+    40_000_000
+
 [<EntryPoint>]
 let main argv =
-    [1..5]
+    [1..lookupSize]
         |> List.fold accumulate initialAcc
         |> (fun acc -> printfn "%s" (string acc.result))
-
-    // generators
-    //    |> List.map (fun gen -> generateMany gen.factor gen.start 5)
-    //    |> List.zip
-    //    |> List.fold compare 0
-    //    |> (fun res -> printfn "%s" (string res))
-
-    // generateMany 16807UL 65UL 5
-    //    |> List.map (fun n -> printfn "%s" n )
-
-        //|> List.map (fun n -> printfn "%s" (string n) )
-    // printfn "%s" (string res)
     0 // return an integer exit code
