@@ -8,24 +8,25 @@ let factors =
 let startValues =
     [65, 8921]
 
-let generate factor prev _ =
-    (prev * factor) % 2147483647I
-
-let generateMany factor start =
-    List.scan (generate factor) start [1..5]
-
 let rec intToBinary i =
     match i with
-    | 0 | 1 -> string i
+    | 0UL | 1UL -> string i
     | _ ->
-        let bit = string (i % 2)
-        (intToBinary (i / 2)) + bit
+        let bit = string (i % 2UL)
+        (intToBinary (i / 2UL)) + bit
+
+let generate factor prev _ =
+    (prev * factor) % 2147483647UL
+
+let generateMany factor start howMany =
+    List.scan (generate factor) start [1..howMany]
+        |> List.map intToBinary
 
 [<EntryPoint>]
 let main argv =
-    generateMany 16807I 65I
-        |> List.map intToBinary
-        |> List.map printfn
-    //    |> List.map (fun n -> printfn "%s" (string n) )
+    generateMany 16807UL 65UL 5
+        |> List.map (fun n -> printfn "%s" n )
+
+        //|> List.map (fun n -> printfn "%s" (string n) )
     // printfn (string first5)
     0 // return an integer exit code
