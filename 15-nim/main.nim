@@ -1,6 +1,7 @@
 import sequtils, strutils
 
-const lookupSize  = 5
+# const lookupSize  = 5
+const lookupSize = 40_000_000
 
 proc process(n: int) =
   echo n
@@ -10,9 +11,9 @@ proc generate(factor: int64, prev: int64): int64 =
 
 proc run() =
   var factorA = 16807
-  var prevA : int64 = 65
+  var prevA : int64 = 883
   var factorB = 48271
-  var prevB : int64 = 8921
+  var prevB : int64 = 879
   var score = 0
 
   for i in 0..(lookupSize-1):
