@@ -1,2 +1,2 @@
 run:
-	nim c -r main.nim
+	nim c -r p2.nim
