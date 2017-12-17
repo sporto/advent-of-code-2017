@@ -1,4 +1,4 @@
-import os, sequtils, strutils, strscans
+import os, sequtils, strutils, strscans, sets
 
 type
   InstructionKind = enum Spin, Exchange, Partner, Unknown
@@ -8,6 +8,11 @@ type
       of Exchange: ea, eb: int
       of Partner: pa, pb: string
       of Unknown: source: string
+
+proc reduce[T,U](source: seq[T], f: proc(acc: U, v: T): U, acc: U): U =
+  result = acc
+  for val in source:
+    result = f(result, val)
 
 proc readInput(): seq[string] =
   let input = readFile("input.txt")
@@ -30,10 +35,18 @@ proc parseInput(source: string): Instruction =
   Instruction(kind: Unknown, source: source)
 
 
+proc applyIns(acc: seq[char], i: Instruction): seq[char] =
+  acc
+
 proc main() =
+  var programs = toSeq 'a'..'p'
+
   let instructions = readInput()
     .map(parseInput)
 
-  echo instructions
+  let res = instructions
+    .reduce(applyIns, programs)
+
+  echo res
 
 main()
