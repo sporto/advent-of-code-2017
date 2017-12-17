@@ -12,16 +12,16 @@
 1. Pyret
 1. Elixir
 1. Go
-
-
+1. Pony
 1. F#
+
+
 1. Dart
 1. Idris
 1. Python
 1. JS
 1. Elm
 1. Ruby
-1. Pony
 1. Scala
 1. ReasonML
 1. Gluon
