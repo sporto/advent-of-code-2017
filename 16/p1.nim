@@ -14,6 +14,9 @@ proc reduce[T,U](source: seq[T], f: proc(acc: U, v: T): U, acc: U): U =
   for val in source:
     result = f(result, val)
 
+proc testInput() : seq[string] =
+  @["s1", "x3/4", "pe/b"]
+
 proc readInput(): seq[string] =
   let input = readFile("input.txt")
   input.split(",")
@@ -35,17 +38,44 @@ proc parseInput(source: string): Instruction =
   Instruction(kind: Unknown, source: source)
 
 
-proc applyIns(acc: seq[char], i: Instruction): seq[char] =
-  acc
+proc applyIns(acc: string, i: Instruction): string =
+  case i.kind
+  of Spin:
+    let pos = acc.len - i.sa
+    acc[pos .. acc.len] & acc[0 .. pos - 1]
+  of Exchange:
+    let a = acc[i.ea]
+    let b = acc[i.eb]
+    acc
+      .replace(a, '1')
+      .replace(b, '2')
+      .replace('1', b)
+      .replace('2', a)
+  of Partner:
+    acc
+      .replace(i.pa, "1")
+      .replace(i.pb, "2")
+      .replace("1", i.pb)
+      .replace("2", i.pa)
+  of Unknown:
+    acc
+
 
 proc main() =
-  var programs = toSeq 'a'..'p'
+  var programs = "abcdefghijklmnop"
+  var testPrograms = "abcde"
+
+  let testInstructions = testInput()
+    .map(parseInput)
 
   let instructions = readInput()
     .map(parseInput)
 
   let res = instructions
     .reduce(applyIns, programs)
+
+  # let res = testInstructions
+  #   .reduce(applyIns, testPrograms)
 
   echo res
 
