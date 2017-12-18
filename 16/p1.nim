@@ -60,23 +60,26 @@ proc applyIns(acc: string, i: Instruction): string =
   of Unknown:
     acc
 
+proc dance(instructions: seq[Instruction], programs: string): string =
+  instructions
+    .reduce(applyIns, programs)
+
 
 proc main() =
   var programs = "abcdefghijklmnop"
-  var testPrograms = "abcde"
+  # var testPrograms = "abcde"
 
-  let testInstructions = testInput()
-    .map(parseInput)
+  # let testInstructions = testInput()
+  #   .map(parseInput)
 
   let instructions = readInput()
     .map(parseInput)
 
-  let res = instructions
-    .reduce(applyIns, programs)
+  var count = 0
+  while count < 1000000000:
+    programs = dance(instructions, programs)
+    count = count + 1
 
-  # let res = testInstructions
-  #   .reduce(applyIns, testPrograms)
-
-  echo res
+  echo programs
 
 main()
